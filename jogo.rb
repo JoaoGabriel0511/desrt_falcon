@@ -16,25 +16,24 @@ class Jogo < Gosu::Window
 	def button_down(id)
 		case id	
 		when Gosu::KbUp
-			@falcon.up
+			@falcon.box.up
 		when Gosu::KbDown
-			@falcon.down
+			@falcon.box.down
 		end											
 	end 
 	def update
 		if Gosu.button_down? Gosu::KB_RIGHT 
-      		@falcon.right
+      		@falcon.box.right
       	elsif Gosu.button_down? Gosu::KB_LEFT 
-      		@falcon.left		
+      		@falcon.box.left		
     	end
     	if rand(200) < 1 and @hieros.size < 5
       		@hieros << Hiero.new
       		@hieros.last.box.warp(rand(680),0,0)
     	end
-    	@hieros.each{|hiero| hiero.move}
-    	@falcon.move
-    	@falcon.collect_hieros(@hieros) 
-    	puts Gosu.distance(@falcon.box.x, @falcon.box.y, @falcon.shadow.box.x, @falcon.shadow.box.y)
+    	@hieros.each{|hiero| hiero.box.move}
+    	@falcon.box.move
+    	@falcon.box.collect_hieros(@hieros) 
 	end
 	def draw
 		@background.draw(0,0,0)
@@ -42,7 +41,5 @@ class Jogo < Gosu::Window
 		@falcon.shadow.sprite.draw(@falcon.shadow.draw_params)
 		@hieros.each{|hiero| hiero.sprite.draw(hiero.draw_params)}
 	end
-	def end
-	end	
 end
 Jogo.new.show

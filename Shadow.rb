@@ -1,9 +1,10 @@
 load "GameObject.rb"
+load "ShadowBox.rb"
 require 'gosu'
 class Shadow < GameObject
-	def move(velx, vely)
-		@box.x += velx
-		@box.y += vely
+	def initialize
+		@image = Gosu::Image.new(define_sprite)
+		@box = ShadowBox.new
 	end
 	private
 		def define_sprite
