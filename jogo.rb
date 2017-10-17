@@ -9,26 +9,38 @@ class Jogo < Gosu::Window
 		@background = Gosu::Image.new("Media/desert.png", :tileable => true)
 		@falcon = Falcon.new
 		@hiero = Hiero.new
+		@hieros = Array.new
 		@falcon.box.warp(80, 60, 2)
-		@hiero.box.warp(500, 30, 0)
+		@falcon.shadow.box.warp(80, 158, 0)
 	end
+	def button_down(id)
+		case id	
+		when Gosu::KbUp
+			@falcon.up
+		when Gosu::KbDown
+			@falcon.down
+		end											
+	end 
 	def update
-		if Gosu.button_down? Gosu::KB_RIGHT or Gosu::button_down? Gosu::GP_RIGHT
-      		@falcon.rigth	
-      	elsif Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT
+		if Gosu.button_down? Gosu::KB_RIGHT 
+      		@falcon.right
+      	elsif Gosu.button_down? Gosu::KB_LEFT 
       		@falcon.left		
-    	elsif Gosu.button_down? Gosu::KB_UP or Gosu::button_down? Gosu::GP_UP
-      		@falcon.up		
-    	elsif Gosu.button_down? Gosu::KB_DOWN or Gosu::button_down? Gosu::GP_DOWN
-      		@falcon.down		
     	end
-    	@hiero.move
+    	if rand(200) < 1 and @hieros.size < 5
+      		@hieros << Hiero.new
+      		@hieros.last.box.warp(rand(680),0,0)
+    	end
+    	@hieros.each{|hiero| hiero.move}
     	@falcon.move
+    	@falcon.collect_hieros(@hieros) 
+    	puts Gosu.distance(@falcon.box.x, @falcon.box.y, @falcon.shadow.box.x, @falcon.shadow.box.y)
 	end
 	def draw
 		@background.draw(0,0,0)
 		@falcon.sprite.draw(@falcon.draw_params)
-		@hiero.sprite.draw(@hiero.draw_params)
+		@falcon.shadow.sprite.draw(@falcon.shadow.draw_params)
+		@hieros.each{|hiero| hiero.sprite.draw(hiero.draw_params)}
 	end
 	def end
 	end	

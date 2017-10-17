@@ -10,6 +10,8 @@ class Sprite
 			params[:image].draw_rot(params[:x],params[:y],2,0)
 		elsif(@name == "hiero")
 			params[:image].draw_rot(params[:x],params[:y],1,0)
+		elsif(@name == "shadow") 
+			params[:image].draw_rot(params[:x],params[:y],0,0)		
 		end					
 	end 
 end	
