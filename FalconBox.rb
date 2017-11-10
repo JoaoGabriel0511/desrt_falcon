@@ -19,6 +19,18 @@ class FalconBox < Box
 		end		
 	end
 
+	def hit(game_objects)
+		hit = false
+		game_objects.each do |game_object|
+			if @height == game_object.box.height
+				if Gosu.distance(@x, @y, game_object.box.x, game_object.box.y) < 15
+	        		hit = true
+	        	end
+			end
+		end
+		return hit		
+	end
+
 	def right
 		if @shadow.box.y < 435
 			@velx = Gosu.offset_x(135, 5)

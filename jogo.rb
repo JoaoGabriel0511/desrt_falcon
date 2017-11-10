@@ -3,6 +3,7 @@ load "Falcon.rb"
 load "Hiero.rb"
 load "Enemy.rb"
 load "Obstacle.rb"
+load "GameOver.rb"
 
 class Jogo < Gosu::Window
 	def initialize 
@@ -34,6 +35,10 @@ class Jogo < Gosu::Window
     	generate(@hieros, 'hiero')
     	generate(@obstacles, 'obstacle')
     	@falcon.box.move
+    	if(@falcon.box.hit(@enemys) || @falcon.box.hit(@obstacles)) 
+    		GameOver.new.show
+    		close!
+    	end
     	@falcon.box.collect_hieros(@hieros) 
 	end
 	def draw
