@@ -40,11 +40,9 @@ class Jogo < Gosu::Window
     		GameOver.new.show
     		close!
     	end
-    	aux1 = @hieros.size
-    	@falcon.box.collect_hieros(@hieros)
-    	aux2 = @hieros.size
-    	colected_hieros = aux1 - aux2 
-    	@falcon.score += colected_hieros * 10
+    	if (@falcon.box.collect_hieros(@hieros))
+    		@falcon.score += 10
+    	end	
 	end
 	def draw
 		@background.draw(0,0,-1)
