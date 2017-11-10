@@ -1,6 +1,8 @@
 require 'gosu'
 load "Falcon.rb"
 load "Hiero.rb"
+load "Enemy.rb"
+load "Obstacle.rb"
 
 class Jogo < Gosu::Window
 	def initialize 
@@ -8,8 +10,9 @@ class Jogo < Gosu::Window
 		self.caption = "Desert Falcon"
 		@background = Gosu::Image.new("Media/desert.png", :tileable => true)
 		@falcon = Falcon.new
-		@hiero = Hiero.new
 		@hieros = Array.new
+		@enemys = Array.new
+		@obstacles = Array.new
 		@falcon.box.warp(80, 60, 2)
 		@falcon.shadow.box.warp(80, 158, 0)
 	end
@@ -27,19 +30,42 @@ class Jogo < Gosu::Window
       	elsif Gosu.button_down? Gosu::KB_LEFT 
       		@falcon.box.left		
     	end
-    	if rand(200) < 1 and @hieros.size < 5
-      		@hieros << Hiero.new
-      		@hieros.last.box.warp(rand(680),0,0)
-    	end
-    	@hieros.each{|hiero| hiero.box.move}
+    	generate(@enemys, 'enemy')
+    	generate(@hieros, 'hiero')
+    	generate(@obstacles, 'obstacle')
     	@falcon.box.move
     	@falcon.box.collect_hieros(@hieros) 
 	end
 	def draw
-		@background.draw(0,0,0)
+		@background.draw(0,0,-1)
 		@falcon.sprite.draw(@falcon.draw_params)
 		@falcon.shadow.sprite.draw(@falcon.shadow.draw_params)
 		@hieros.each{|hiero| hiero.sprite.draw(hiero.draw_params)}
+		@enemys.each{|enemy| enemy.sprite.draw(enemy.draw_params)}
+		@obstacles.each{|obstacle| obstacle.sprite.draw(obstacle.draw_params)}
 	end
+	private 
+		def generate(array, name)
+			if rand(200) < 1 and array.size < 5
+				if(name == 'hiero')
+	      			array << Hiero.new
+	      			array.last.box.warp(rand(680),0,0)
+	      		elsif(name == 'enemy')
+	      			array << Enemy.new
+	      			array.last.box.warp(rand(680),0,2)
+	      		elsif(name == 'obstacle')
+	      			array << Obstacle.new
+	      			array.last.box.warp(rand(680),0,0)		
+	      		end			
+    		end
+	    	array.each{|game_object| game_object.box.move}
+	    	array.reject! do |game_object|
+    	 	if(game_object.box.x > 640 || game_object.box.y > 480)
+    	 		true
+    		else
+    			false
+    		end	
+		end
+	end		
 end
 Jogo.new.show
