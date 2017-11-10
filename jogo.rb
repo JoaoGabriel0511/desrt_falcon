@@ -14,6 +14,7 @@ class Jogo < Gosu::Window
 		@hieros = Array.new
 		@enemys = Array.new
 		@obstacles = Array.new
+		@points = Gosu::Font.new(20)
 		@falcon.box.warp(80, 60, 2)
 		@falcon.shadow.box.warp(80, 158, 0)
 	end
@@ -39,10 +40,15 @@ class Jogo < Gosu::Window
     		GameOver.new.show
     		close!
     	end
-    	@falcon.box.collect_hieros(@hieros) 
+    	aux1 = @hieros.size
+    	@falcon.box.collect_hieros(@hieros)
+    	aux2 = @hieros.size
+    	colected_hieros = aux1 - aux2 
+    	@falcon.score += colected_hieros * 10
 	end
 	def draw
 		@background.draw(0,0,-1)
+		@points.draw("Score: #{@falcon.score}", 10, 10, 0, 1.0, 1.0, Gosu::Color::BLACK)
 		@falcon.sprite.draw(@falcon.draw_params)
 		@falcon.shadow.sprite.draw(@falcon.shadow.draw_params)
 		@hieros.each{|hiero| hiero.sprite.draw(hiero.draw_params)}
